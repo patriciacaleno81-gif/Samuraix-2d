@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Samuraix 2D</title>
+  <style>
+    body {
+      text-align: center;
+      background: linear-gradient(skyblue, white);
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .title {
+      margin: 10px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    canvas {
+      border: 2px solid black;
+      background: #dff6ff;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="title">Samuraix 2D</h1>
+  <canvas id="gameCanvas" width="600" height="400"></canvas>
+
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // Jugador
+    const player = {
+      x: 50,
+      y: 300,
+      width: 30,
+      height: 30,
+      color: "blue",
+      speed: 5,
+      life: 5
+    };
+
+    // Enemigos
+    const enemies = [
+      { x: 200, y: 300, width: 30, height: 30, color: "red", life: 2 },
+      { x: 350, y: 300, width: 30, height: 30, color: "red", life: 3 },
+      { x: 500, y: 300, width: 30, height: 30, color: "red", life: 4 }
+    ];
+
+    // Controles
+    const keys = {};
+    document.addEventListener("keydown", (e) => keys[e.key] = true);
+    document.addEventListener("keyup", (e) => keys[e.key] = false);
+
+    function drawPlayer() {
+      ctx.fillStyle = player.color;
+      ctx.fillRect(player.x, player.y, player.width, player.height);
+    }
+
+    function drawEnemies() {
+      enemies.forEach(enemy => {
+        ctx.fillStyle = enemy.color;
+        ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+
+        // Barra de vida del enemigo
+        ctx.fillStyle = "green";
+        ctx.fillRect(enemy.x, enemy.y - 10, enemy.life * 10, 5);
+      });
+    }
+
+    function drawUI() {
+      ctx.fillStyle = "black";
+      ctx.font = "16px Arial";
+      ctx.fillText("Vida: " + player.life, 10, 20);
+    }
+
+    function updatePlayer() {
+      if (keys["ArrowRight"]) player.x += player.speed;
+      if (keys["ArrowLeft"]) player.x -= player.speed;
+      if (keys["ArrowUp"]) player.y -= player.speed;
+      if (keys["ArrowDown"]) player.y += player.speed;
+    }
+
+    function gameLoop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      updatePlayer();
+      drawPlayer();
+      drawEnemies();
+      drawUI();
+      requestAnimationFrame(gameLoop);
+    }
+
+    gameLoop();
+  </script>
+</body>
+</html>
